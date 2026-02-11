@@ -2,37 +2,41 @@
 
 DevBase est une application **full-stack sécurisée** permettant de gérer des **Projects** et des **Tasks** avec :
 
-- 🔐 API REST sécurisée (JWT)
-- 🗄️ PostgreSQL via Prisma ORM
-- 🧠 Validation stricte avec Zod
-- 📄 Documentation OpenAPI (Swagger)
-- 🎨 Dashboard React moderne (Mantine)
-- 🔗 Intégration backend ↔ frontend réelle (pas de mock)
+* 🔐 API REST sécurisée (JWT)
+* 🗄️ PostgreSQL via Prisma ORM
+* 🧠 Validation stricte avec Zod
+* 📄 Documentation OpenAPI (Swagger)
+* 🎨 Dashboard React moderne (Mantine)
+* 🔗 Intégration backend ↔ frontend réelle (pas de mock)
 
 ---
 
-## 🏗 Architecture
+# 🏗 Architecture
 
-### Backend
+## 🔙 Backend
 
-- Node.js
-- TypeScript
-- Express
-- Prisma ORM
-- PostgreSQL
-- Zod (validation stricte)
-- JWT Authentication
-- Swagger (OpenAPI)
-- Helmet + Rate Limiting
+* Node.js
+* TypeScript
+* Express
+* Prisma ORM
+* PostgreSQL
+* Zod (validation stricte)
+* JWT Authentication (Access + Refresh)
+* Swagger (OpenAPI 3.0)
+* Helmet
+* Rate Limiting
+* Architecture modulaire (`modules/auth`, `modules/projects`, `modules/tasks`)
 
-### Frontend
+## 🎨 Frontend
 
-- React (Vite)
-- TypeScript
-- Mantine UI
-- Notifications
-- Dark / Light Theme Toggle
-- Server-side pagination support
+* React (Vite)
+* TypeScript
+* Mantine UI
+* Notifications
+* Kanban board
+* Server-side pagination
+* Light / Dark Theme Toggle
+* Auth token injection automatique
 
 ---
 
@@ -40,24 +44,24 @@ DevBase est une application **full-stack sécurisée** permettant de gérer des 
 
 ## 🔐 Auth
 
-- Register / Login avec JWT
-- Refresh token (cookie HTTP-only)
-- Routes protégées via `Authorization: Bearer <token>`
-- Middleware d’authentification
-- Logout + nettoyage session
+* Register / Login avec JWT
+* Refresh token (cookie HTTP-only)
+* Routes protégées via `Authorization: Bearer <token>`
+* Middleware d’authentification
+* Logout + nettoyage session
 
 ---
 
 ## 📁 Projects
 
-- CRUD complet
-- Pagination server-side (`page`, `pageSize`)
-- Recherche (`search`)
-- Tri (`sortBy`, `sortOrder`)
-- Ownership strict (un utilisateur ne voit que ses projets)
-- Validation Zod en `.strict()`
+* CRUD complet
+* Pagination server-side (`page`, `pageSize`)
+* Recherche (`search`)
+* Tri (`sortBy`, `sortOrder`)
+* Ownership strict (un utilisateur ne voit que ses projets)
+* Validation Zod en `.strict()`
 
-Réponse pagination :
+### Réponse pagination :
 
 ```json
 {
@@ -73,53 +77,150 @@ Réponse pagination :
 
 ## ✅ Tasks
 
-- CRUD complet
-- Filtrage server-side :
-  - `projectId`
-  - `status`
+* CRUD complet
+* Filtrage server-side :
 
-- Kanban board (TODO / DOING / DONE)
-- Vérification ownership
-- Vérification que le projet appartient à l’utilisateur
-- Validation backend stricte
+  * `projectId`
+  * `status`
+* Kanban board (TODO / DOING / DONE)
+* Vérification ownership
+* Vérification que le projet appartient à l’utilisateur
+* Validation backend stricte
 
 ---
 
 ## 📊 Dashboard
 
-- Total Projects
-- Total Tasks
-- % Done calculé dynamiquement
-- Liste des tâches récentes
-- Données 100% live (API réelle)
+* Total Projects
+* Total Tasks
+* % Done calculé dynamiquement
+* Liste des tâches récentes
+* Données 100% live (API réelle)
 
 ---
 
 ## 🎨 Settings
 
-- Light / Dark mode (instantané)
-- Persistance via localStorage
-- Logout
-- Affichage infos API
-- Préférences locales (notifications demo)
+* Light / Dark mode (instantané)
+* Persistance via localStorage
+* Logout
+* Affichage infos API
+* Préférences locales (notifications demo)
 
 ---
 
 # 🔗 Démo
 
-### API Production
+## 🌍 Frontend (Netlify)
+
+👉 [https://devbase-fullstack-dashboard.netlify.app/](https://devbase-fullstack-dashboard.netlify.app/)
+
+## 🔙 API Production (Render)
+
+👉 [https://devbase-api-egxh.onrender.com](https://devbase-api-egxh.onrender.com)
+
+## 📘 Swagger
+
+👉 [https://devbase-api-egxh.onrender.com/docs](https://devbase-api-egxh.onrender.com/docs)
+
+> ⚠️ Render peut avoir un "cold start" après une période d’inactivité (~20–30 secondes).
+
+---
+
+# 🧪 How to Test
+
+DevBase peut être testé de 3 manières : Live, Swagger, ou en local.
+
+---
+
+## 🌍 Option 1 — Tester la version live (recommandé)
+
+### Frontend
+
+1. Ouvrir :
+
+   ```
+   https://devbase-fullstack-dashboard.netlify.app/
+   ```
+2. Cliquer sur **Register**
+3. Créer un compte
+4. Se connecter
+5. Créer des Projects
+6. Ajouter des Tasks
+7. Tester le Dashboard
+8. Tester le Light/Dark toggle
+
+---
+
+### API via Swagger
+
+1. Ouvrir :
+
+   ```
+   https://devbase-api-egxh.onrender.com/docs
+   ```
+2. Faire un `POST /api/auth/login`
+3. Copier le `accessToken`
+4. Cliquer sur **Authorize**
+5. Tester les endpoints protégés
+
+---
+
+## 🧪 Option 2 — Tester avec Postman
+
+1. `POST /api/auth/register`
+2. `POST /api/auth/login`
+3. Copier le `accessToken`
+4. Ajouter header :
 
 ```
-https://devbase-api-egxh.onrender.com
+Authorization: Bearer <token>
 ```
 
-### Swagger
+Puis tester :
+
+* CRUD Projects
+* CRUD Tasks
+* Filtres
+* Pagination
+
+---
+
+## 💻 Option 3 — Lancer en local
+
+### Backend
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+npm run prisma:generate
+npm run prisma:migrate
+npm run dev
+```
+
+Swagger local :
 
 ```
-https://devbase-api-egxh.onrender.com/docs
+http://localhost:4000/docs
 ```
 
-> Le frontend consomme l’API via `VITE_API_BASE_URL`.
+---
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+cp .env.example .env
+npm run dev
+```
+
+Puis ouvrir :
+
+```
+http://localhost:5173
+```
 
 ---
 
@@ -168,45 +269,6 @@ DELETE /api/tasks/:id
 
 ---
 
-# ⚙️ Installation (Local)
-
-## Prérequis
-
-- Node.js 18+
-- PostgreSQL
-
----
-
-## Backend
-
-```bash
-cd backend
-npm install
-cp .env.example .env
-npm run prisma:generate
-npm run prisma:migrate
-npm run dev
-```
-
-Swagger :
-
-```
-http://localhost:4000/docs
-```
-
----
-
-## Frontend
-
-```bash
-cd frontend
-npm install
-cp .env.example .env
-npm run dev
-```
-
----
-
 # 🔐 Variables d’environnement
 
 ## Backend `.env`
@@ -234,36 +296,41 @@ ou URL Render en production.
 
 # 🧠 Notes techniques importantes
 
-- Pagination Projects = server-side
-- Validation stricte Zod (refus des clés inconnues)
-- Gestion d’erreurs centralisée :
-  - VALIDATION_ERROR
-  - UNAUTHORIZED
-  - NOT_FOUND
-  - INTERNAL_SERVER_ERROR
+* Pagination Projects = server-side
 
-- API documentée avec OpenAPI 3.0
-- Architecture modulaire (`modules/auth`, `modules/projects`, `modules/tasks`)
-- Intégration frontend sécurisée (token injecté automatiquement)
+* Validation stricte Zod (refus des clés inconnues)
+
+* Gestion d’erreurs centralisée :
+
+  * `VALIDATION_ERROR`
+  * `UNAUTHORIZED`
+  * `NOT_FOUND`
+  * `INTERNAL_SERVER_ERROR`
+
+* API documentée avec OpenAPI 3.0
+
+* Architecture modulaire
+
+* Intégration frontend sécurisée (token injecté automatiquement)
 
 ---
 
 # 🎯 Ce que ce projet démontre
 
-- Conception d’une API sécurisée
-- Gestion de base de données relationnelle
-- Validation stricte côté serveur
-- Gestion propre des erreurs
-- Intégration frontend ↔ backend authentifiée
-- Pagination et filtrage server-side
-- Dashboard connecté à des données réelles
-- Architecture propre et scalable
+* Conception d’une API sécurisée
+* Gestion de base de données relationnelle
+* Validation stricte côté serveur
+* Gestion propre des erreurs
+* Intégration frontend ↔ backend authentifiée
+* Pagination et filtrage server-side
+* Dashboard connecté à des données réelles
+* Architecture scalable et production-ready
+* Déploiement cloud (Render + Netlify)
 
 ---
 
 # 👤 Auteur
 
-Fruittella Tshifungat
+**Fruittella Tshifungat**
 Full-Stack Developer — Portfolio Project
-
----
+📍 Ottawa, Canada
