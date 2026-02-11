@@ -1,7 +1,10 @@
 /**
  * ThemeToggle.tsx
  * -------------------------------------------------------
- * Petit bouton pour basculer entre "night" et "dark".
+ * Bouton pour basculer entre "dark" et "light" (Mantine).
+ *
+ * - Thème supporté : ThemeName = "dark" | "light"
+ * - Le composant reste simple (UI type "icon button")
  */
 
 import { Moon, Sun } from "lucide-react";
@@ -14,18 +17,18 @@ type Props = {
 };
 
 export default function ThemeToggle({ theme, onChange }: Props) {
-  const isNight = theme === "night";
+  const isDark = theme === "dark";
 
   return (
     <button
       type="button"
       className="btn btn-ghost btn-sm"
       aria-label="Toggle theme"
-      title={isNight ? "Passer en dark" : "Passer en night"}
+      title={isDark ? "Passer en light" : "Passer en dark"}
       onClick={() => onChange(toggleTheme(theme))}
     >
-      {isNight ? <Moon size={18} /> : <Sun size={18} />}
-      <span className="hidden sm:inline">{isNight ? "Night" : "Dark"}</span>
+      {isDark ? <Moon size={18} /> : <Sun size={18} />}
+      <span className="hidden sm:inline">{isDark ? "Dark" : "Light"}</span>
     </button>
   );
 }
