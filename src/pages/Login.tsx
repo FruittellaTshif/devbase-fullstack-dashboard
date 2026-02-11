@@ -26,7 +26,7 @@ export default function Login() {
 
   async function onSubmit() {
     if (!canSubmit) return;
-
+        console.log("CLICK SIGN IN ✅"); // <-- AJOUT
     setLoading(true);
     try {
       const res = await authService.login({ email, password });
