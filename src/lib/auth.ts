@@ -1,0 +1,25 @@
+/**
+ * auth.ts
+ * -----------------------------------------
+ * Rôle :
+ * - Centraliser la gestion du token (accessToken)
+ * - Éviter de dupliquer localStorage partout
+ */
+
+const TOKEN_KEY = "pm_access_token";
+
+export function setAccessToken(token: string) {
+  localStorage.setItem(TOKEN_KEY, token);
+}
+
+export function getAccessToken(): string | null {
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+export function clearAccessToken() {
+  localStorage.removeItem(TOKEN_KEY);
+}
+
+export function isAuthenticated(): boolean {
+  return Boolean(getAccessToken());
+}
