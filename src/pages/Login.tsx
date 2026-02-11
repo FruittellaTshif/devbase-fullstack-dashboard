@@ -25,31 +25,43 @@ export default function Login() {
   const canSubmit = email.trim().length > 3 && password.trim().length >= 6;
 
   async function onSubmit() {
-    if (!canSubmit) return;
-        console.log("CLICK SIGN IN ✅"); // <-- AJOUT
-    setLoading(true);
-    try {
-      const res = await authService.login({ email, password });
+  console.log("🔥 CLICK SIGN IN");
+  console.log("canSubmit:", canSubmit);
+  console.log("email:", email);
 
-      notifications.show({
-        title: "Logged in",
-        message: `Welcome ${res.user.name}!`,
-        color: "green",
-      });
-
-      // Option simple : redirige "logiquement" vers le dashboard
-      // (App.tsx va voir l'event auth:changed et afficher Dashboard)
-    } catch (e) {
-      const message = e instanceof Error ? e.message : "Login failed";
-      notifications.show({
-        title: "Login failed",
-        message,
-        color: "red",
-      });
-    } finally {
-      setLoading(false);
-    }
+  if (!canSubmit) {
+    console.log("❌ Form invalid — submit blocked");
+    return;
   }
+
+  setLoading(true);
+
+  try {
+    console.log("🚀 Sending login request...");
+
+    const res = await authService.login({ email, password });
+
+    console.log("✅ Login success:", res);
+
+    notifications.show({
+      title: "Logged in",
+      message: `Welcome ${res.user.name}!`,
+      color: "green",
+    });
+  } catch (e) {
+    console.error("💥 Login error:", e);
+
+    const message = e instanceof Error ? e.message : "Login failed";
+
+    notifications.show({
+      title: "Login failed",
+      message,
+      color: "red",
+    });
+  } finally {
+    setLoading(false);
+  }
+}
 
   return (
     <Card withBorder radius="lg" p="xl" maw={420}>
